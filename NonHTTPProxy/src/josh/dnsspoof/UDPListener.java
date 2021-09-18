@@ -33,6 +33,8 @@ import josh.utils.events.DNSEvent;
 import josh.utils.events.DNSTableEvent;
 import josh.utils.events.DNSTableEventListener;
 import josh.utils.events.UDPEventListener;
+import josh.ui.utils.warningDiaglog;
+
 //import jpcap.JpcapCaptor;
 //import jpcap.NetworkInterface;
 //import jpcap.NetworkInterfaceAddress;
@@ -110,7 +112,8 @@ public class UDPListener implements Runnable{
 		
 	}
 	public void StopServer(){
-		datagramSocket.close();
+		if ( datagramSocket != null) 
+			datagramSocket.close();
 		stop = true;
 	}
 	public boolean isStopped(){
@@ -137,6 +140,10 @@ public class UDPListener implements Runnable{
            
             
         } catch (SocketException e) { 
+			stop=true;  // datagram socket is in error. stop should true
+			warningDiaglog x = new warningDiaglog();
+			x.warning(e.getMessage());
+			//popup a messasge to tell error.
         	Callbacks.printError(e.getMessage());
         	e.printStackTrace(); 
         } 
